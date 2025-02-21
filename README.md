@@ -1,1 +1,3 @@
-# ai_game
+# AI - Game - Generate Procedural Maps
+
+## Tech Stack
