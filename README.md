@@ -57,6 +57,8 @@ ONNX (Open Neural Network Exchange) allows us to:
 pip install -r requirements.txt 
 ```
 
+<br /><br />
+
 ## 📌 Usage
 
 ### 1️⃣ Train and export the AI model
