@@ -1,74 +1,86 @@
 import pygame
-import numpy as np
-import onnxruntime as ort
+import torch
+from src.ai_model.model import MapGenerator
+from src.ai_model.utils import tensor_to_map
 
-# Initialisation
-def init():
-    """Initialise Pygame, charge ONNX Runtime et configure l'affichage."""
-    pygame.init()
-    global screen, clock, session, monitor_refresh_rate
-    screen = pygame.display.set_mode((800, 600))
-    clock = pygame.time.Clock()
+# Initialisation globale de Pygame
+pygame.init()
 
-    # Récupérer la fréquence de rafraîchissement du moniteur
-    display_info = pygame.display.Info()
-    monitor_refresh_rate = display_info.current_w
+# Constantes
+WINDOW_HEIGHT_SIZE = 800  # Taille de la fenêtre en pixels
+WINDOW_WIDTH_SIZE = 800   # Taille de la fenêtre en pixels
+TILE_HEIGHT_SIZE = 8      # Taille d'une tuile en pixels
+TILE_WIDTH_SIZE = 8       # Taille d'une tuile en pixels
+MAP_HEIGHT_SIZE = 64      # Taille de la carte en tuiles
+MAP_WIDTH_SIZE = 64       # Taille de la carte en tuiles
 
-    # Charger le modèle ONNX
-    session = ort.InferenceSession("../../models/map_generator.onnx")
+# Variables globales
+screen = pygame.display.set_mode((WINDOW_WIDTH_SIZE, WINDOW_HEIGHT_SIZE))
+pygame.display.set_caption("Procedural Map Generator")
+clock = pygame.time.Clock()
+model = None
+current_map = None
 
-# Génération de la carte
-def generate_map():
-    """Génère une nouvelle map à partir du modèle ONNX."""
-    input_data = np.random.rand(1, 10).astype(np.float32)
-    output = session.run(None, {"input": input_data})[0]
-    return output.reshape(16, 16)  # Reshape en 16x16
+def load():
+    """Charge les ressources initiales (modèle, etc.)."""
+    global model
+    model = MapGenerator(input_size=64)
+    model.eval()
+    print("Modèle chargé avec succès.")
 
-# Gestion des événements
 def handle_events():
-    """Gère les entrées utilisateur (fermeture, touche ESPACE)."""
-    global running, output
+    """Gère les événements utilisateur."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            output = generate_map()  # Générer une nouvelle map en appuyant sur ESPACE
+            return False
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            update()  # Générer une nouvelle carte quand on appuie sur ESPACE
+    return True
 
-# Mise à jour
 def update():
-    """Met à jour la logique du jeu (actuellement rien à mettre à jour)."""
-    pass
+    """Met à jour l'état du jeu (génère une nouvelle carte)."""
+    global current_map
+    noise = torch.randn(1, 64)
+    with torch.no_grad():
+        map_tensor = model(noise).squeeze(0).squeeze(0)  # [64, 64]
+        current_map = tensor_to_map(map_tensor)
 
-# Affichage de la carte
 def draw():
-    """Affiche la carte générée dans Pygame."""
-    screen.fill((0, 0, 0))
-    tile_size = 20
-    for y in range(16):
-        for x in range(16):
-            color = (0, int(255 * output[y, x]), 0)
-            pygame.draw.rect(screen, color, (x * tile_size, y * tile_size, tile_size, tile_size))
-    
+    """Dessine la carte à l'écran."""
+    if current_map is None:
+        screen.fill((0, 0, 0))  # Fond noir si pas de carte
+    else:
+        screen.fill((0, 0, 0))  # Fond noir
+        for y in range(MAP_HEIGHT_SIZE):
+            for x in range(MAP_WIDTH_SIZE):
+                color = (255, 255, 255) if current_map[y, x] == 1 else (0, 0, 0)
+                pygame.draw.rect(
+                    screen,
+                    color,
+                    pygame.Rect(x * TILE_WIDTH_SIZE, y * TILE_HEIGHT_SIZE, TILE_WIDTH_SIZE, TILE_HEIGHT_SIZE)
+                )
+
     pygame.display.flip()
 
-# Boucle principale du jeu
 def main():
-    """Boucle principale du jeu : gestion des événements, mise à jour et affichage."""
-    global running, output
+    """Boucle principale du jeu."""
+    # Récupérer le taux de rafraîchissement du moniteur
+    display_info = pygame.display.Info()
+    monitor_refresh_rate = display_info.current_hz if display_info.current_hz > 0 else 60 
+    print(f"Taux de rafraîchissement du moniteur : {monitor_refresh_rate} Hz")
+
+    # Charger les ressources
+    load()
+
+    # Boucle de jeu
     running = True
-    output = generate_map()  # Première génération de map
-
     while running:
-        handle_events()  # Gérer les entrées utilisateur
-        update()         # Mettre à jour les éléments (si nécessaire)
-        draw()           # Afficher la map
+        running = handle_events()
+        draw()
+        clock.tick(monitor_refresh_rate) # Limiter au taux de rafraîchissement du moniteur
 
-        # Synchronisation avec la fréquence du moniteur
-        clock.tick_busy_loop(monitor_refresh_rate)
-
+    # Quitter le jeu
     pygame.quit()
 
-# Exécution du jeu
 if __name__ == "__main__":
-    init()
     main()

@@ -1,5 +1,6 @@
-torch
-onnx
-onnxruntime
-pygame
-numpy
+torch          # Framework pour l'entraînement du modèle
+torchvision    # Utilitaire pour manipuler des données
+numpy          # Manipulation des tenseurs et pré/post-processing
+onnx           # Exportation vers ONNX
+onnxruntime    # Validation du modèle ONNX
+pygame         # Visualisation des cartes générées

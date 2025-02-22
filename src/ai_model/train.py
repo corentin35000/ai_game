@@ -1,26 +1,45 @@
 import torch
-import numpy as np
-import onnx
+import torch.nn as nn
+import torch.optim as optim
 from model import MapGenerator
 
-# Création du modèle
-model = MapGenerator()
+def train_model():
+    # Hyperparamètres
+    input_size = 64
+    epochs = 100
+    batch_size = 32
+    learning_rate = 0.001
 
-# Simuler un entraînement
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-criterion = nn.MSELoss()
+    # Initialisation
+    model = MapGenerator(input_size=input_size)
+    criterion = nn.MSELoss()  # Exemple de perte (à adapter selon ton objectif)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-for _ in range(1000):  # Faux entraînement pour l'exemple
-    input_data = torch.rand(1, 10)
-    target_output = torch.rand(1, 256)
-    optimizer.zero_grad()
-    loss = criterion(model(input_data), target_output)
-    loss.backward()
-    optimizer.step()
+    # Simulation d'entraînement (remplace avec tes vraies données)
+    for epoch in range(epochs):
+        noise = torch.randn(batch_size, input_size)
+        target = torch.randn(batch_size, 1, input_size, input_size)  # Données fictives
+        optimizer.zero_grad()
+        output = model(noise)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+        if epoch % 10 == 0:
+            print(f"Epoch [{epoch}/{epochs}], Loss: {loss.item():.4f}")
 
-# Exporter en ONNX
-dummy_input = torch.rand(1, 10)
-torch.onnx.export(model, dummy_input, "../../models/map_generator.onnx",
-                  input_names=['input'], output_names=['output'])
+    # Exportation en ONNX
+    model.eval()
+    dummy_input = torch.randn(1, input_size)  # Entrée fictive pour l'export
+    torch.onnx.export(
+        model,
+        dummy_input,
+        "../../models/map_generator.onnx",
+        input_names=["input"],
+        output_names=["output"],
+        dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}},
+        opset_version=11
+    )
+    print("Modèle exporté vers ../../models/map_generator.onnx")
 
-print("Modèle exporté en ONNX : ../../models/map_generator.onnx")
+if __name__ == "__main__":
+    train_model() # Lancer l'entraînement

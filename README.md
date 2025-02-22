@@ -6,7 +6,7 @@
 - **PyTorch (AI Framework)** - Training deep learning model
 - **ONNX (Model Format)** - Portable model format for inference in C
 - **ONNX Runtime (Inference Engine)** - Running ONNX models efficiently in C
-- **Pygame (Visualization)** - Displaying AI-generated maps for debugging
+- **Pygame (Game Framework Python)** - Displaying AI-generated maps for debugging
 - **Makefile (Build System)** - Compiling the C integration
 
 <br /><br />
@@ -51,7 +51,36 @@ ONNX (Open Neural Network Exchange) allows us to:
 
 ## ⚙️ Setup Environment - Development
 
-### 1️⃣ Install dependencies
+### 1️⃣ Activer le support des chemins longs (Windows)
+```bash
+# Ouvrir PowerShell en mode administrateur
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1
+
+# Redémarer sont terminal ensuite
+```
+
+### 2️⃣ Créer un environnement virtuel propre (Windows)
+```bash
+# Créer l'environnement virtuel
+python -m venv C:\venv\myproject_env
+
+# Activer l'environnement virtuel
+C:\venv\myproject_env\Scripts\activate
+```
+
+### 3️⃣ Visual Studio + CMake + zlib (Windows) for ONNX (Windows)
+1. Visual Studio: Download and install Visual Studio 2022 with MSVC >= v143, Windows SDK >= 10 and component C/C++ desktop in Visual Studio.
+2. CMake: Ensure CMake 3.25 or newer is installed and added to your PATH.
+3. zlib:
+```bash
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+.\bootstrap-vcpkg.bat
+.\vcpkg install zlib:x64-windows
+.\vcpkg integrate install
+```
+
+### 4️⃣ Install dependencies
 ```bash
 # Install Python dependencies
 pip install -r requirements.txt 
@@ -63,6 +92,7 @@ pip install -r requirements.txt
 
 ### 1️⃣ Train and export the AI model
 ```bash
+C:\venv\myproject_env\Scripts\activate
 cd src/ai_model
 python train.py
 ```
@@ -70,6 +100,7 @@ This will generate `map_generator.onnx` inside the `models/` folder.
 
 ### 2️⃣ Run visualization with Pygame
 ```bash
+C:\venv\myproject_env\Scripts\activate
 cd src/visualization
 python display.py
 ```
