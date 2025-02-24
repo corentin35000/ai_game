@@ -25,7 +25,6 @@ class MapGenerator(nn.Module):
         x = x.view(-1, 1, self.input_size, self.input_size)
         return x
 
-# Test rapide
 if __name__ == "__main__":
     model = MapGenerator()
     noise = torch.randn(1, 64)  # Entrée : bruit aléatoire
