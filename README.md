@@ -7,7 +7,7 @@
 - **ONNX (Model Format)** - Portable model format for inference in C
 - **ONNX Runtime (Inference Engine)** - Running ONNX models efficiently in C
 - **Pygame (Game Framework)** - Displaying AI-generated maps for debugging
-- **Makefile (Build System)** - Compiling the C integration
+- **CMake (Build System)** - Compiling the C integration
 
 <br /><br />
 
@@ -28,7 +28,7 @@ This project follows a structured layout to keep the **AI model, training, visua
 │   ├── map_generator.onnx            # Exported ONNX model for inference in C
 ├── 📂 game/                          # Integration of ONNX Runtime in C
 │   ├── main.c                         # Loading ONNX model in C and generating maps
-│   ├── Makefile                      # Compilation instructions
+│   ├── CMakelists.txt                 # Compilation instructions
 ├── 📜 .gitignore                      # Git ignore rules
 ├── 📜 requirements.txt                # Python dependencies
 ├── 📜 README.md                       # Project documentation
@@ -41,7 +41,7 @@ Ce projet vise à **générer des cartes procédurales** pour un jeu similaire �
 
 <br /><br />
 
-### 🔥 Why ONNX ?
+## 🔥 Why ONNX ?
 ONNX (Open Neural Network Exchange) nous permet de :
 - Former un modèle d'IA en Python et l'utiliser en C **sans avoir besoin de Python à l'exécution**.
 - Optimiser pour de multiples plateformes (**Windows, Linux, macOS, iOS, Android**).
