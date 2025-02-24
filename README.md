@@ -51,7 +51,8 @@ ONNX (Open Neural Network Exchange) nous permet de :
 
 ## ⚙️ Setup Environment - Development
 
-### 1️⃣ Download and Install Python >= 3.12.3
+### 1️⃣ Download and Install Python <= 3.12.9
+Utiliser une version de Python en-desssous de 3.12.9 ou strictement égal, sinon ONNX n'as pas de binaire pré-compiler pour Python >= 13.x.x <br />
 URL : https://www.python.org/downloads/
 
 ### 2️⃣ Activer le support des chemins longs (Windows)
@@ -71,19 +72,7 @@ python -m venv C:\venv\myproject_env
 C:\venv\myproject_env\Scripts\activate
 ```
 
-### 4️⃣ Visual Studio + CMake + zlib for ONNX (Windows)
-1. Visual Studio: Download and install Visual Studio 2022 with MSVC >= v143, Windows SDK >= 10 and component C/C++ desktop in Visual Studio.
-2. CMake: Ensure CMake 3.25 or newer is installed and added to your PATH.
-3. zlib:
-```bash
-git clone https://github.com/Microsoft/vcpkg.git
-cd vcpkg
-.\bootstrap-vcpkg.bat
-.\vcpkg install zlib:x64-windows
-.\vcpkg integrate install
-```
-
-### 5️⃣ Install Python dependencies
+### 4️⃣ Install Python dependencies
 ```bash
 pip install -r requirements.txt 
 ```
@@ -95,16 +84,14 @@ pip install -r requirements.txt
 ### 1️⃣ Train and export the AI model
 ```bash
 C:\venv\myproject_env\Scripts\activate
-cd src/ai_model
-python train.py
+python -m src.ai_model.train
 ```
 This will generate `map_generator.onnx` inside the `models/` folder.
 
 ### 2️⃣ Run visualization with Pygame
 ```bash
 C:\venv\myproject_env\Scripts\activate
-cd src/visualization
-python display.py
+python -m src.visualization.display
 ```
 Press **SPACE** to generate new maps in real-time.
 
