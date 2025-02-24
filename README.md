@@ -1,4 +1,4 @@
-# AI - Neural Map Generator / AI-Powered Procedural Worlds
+# Ashen Kingdoms - Neural Map Generator / AI-Powered Procedural Worlds
 
 ## 🛠 Tech Stack
 - **C (Language)** - Core game logic and ONNX Runtime integration
