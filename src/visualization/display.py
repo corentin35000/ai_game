@@ -8,7 +8,7 @@ pygame.init()
 
 # Constantes
 WINDOW_HEIGHT_SIZE = 800  # Taille de la fenêtre en pixels
-WINDOW_WIDTH_SIZE = 800   # Taille de la fenêtre en pixels
+WINDOW_WIDTH_SIZE = 1280   # Taille de la fenêtre en pixels
 TILE_HEIGHT_SIZE = 8      # Taille d'une tuile en pixels
 TILE_WIDTH_SIZE = 8       # Taille d'une tuile en pixels
 MAP_HEIGHT_SIZE = 64      # Taille de la carte en tuiles
@@ -35,6 +35,7 @@ def handle_events():
             return False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             update()  # Générer une nouvelle carte quand on appuie sur ESPACE
+
     return True
 
 def update():
@@ -64,11 +65,6 @@ def draw():
 
 def main():
     """Boucle principale du jeu."""
-    # Récupérer le taux de rafraîchissement du moniteur
-    display_info = pygame.display.Info()
-    monitor_refresh_rate = display_info.current_hz if display_info.current_hz > 0 else 60 
-    print(f"Taux de rafraîchissement du moniteur : {monitor_refresh_rate} Hz")
-
     # Charger les ressources
     load()
 
@@ -77,7 +73,7 @@ def main():
     while running:
         running = handle_events()
         draw()
-        clock.tick(monitor_refresh_rate) # Limiter au taux de rafraîchissement du moniteur
+        clock.tick(60) # Limiter au taux de rafraîchissement du moniteur
 
     # Quitter le jeu
     pygame.quit()

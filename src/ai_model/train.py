@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from model import MapGenerator
+from src.ai_model.model import MapGenerator
 
 def train_model():
     # Hyperparamètres
@@ -33,13 +33,13 @@ def train_model():
     torch.onnx.export(
         model,
         dummy_input,
-        "../../models/map_generator.onnx",
+        "./models/map_generator.onnx",
         input_names=["input"],
         output_names=["output"],
         dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}},
         opset_version=11
     )
-    print("Modèle exporté vers ../../models/map_generator.onnx")
+    print("Modèle exporté vers ./models/map_generator.onnx")
 
 if __name__ == "__main__":
     train_model() # Lancer l'entraînement
