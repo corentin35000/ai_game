@@ -1,4 +1,4 @@
-# AI - Game / Generate Procedural Maps
+# AI - Neural Map Generator / AI-Powered Procedural Worlds
 
 ## 🛠 Tech Stack
 - **C (Language)** - Core game logic and ONNX Runtime integration
